@@ -1,0 +1,143 @@
+{% extends "base.html" %} 
+
+{% block title %}Subscribe{% endblock title %} 
+{% block content %}
+<h1>Subscribe</h1>
+
+<form
+    id="paypal-form"
+    action="https://sandbox.paypal.com/cgi-bin/webscr"
+    method="post" target="_top"
+    >
+    <fieldset id="subscription-type-fieldset">
+        <legend>Format</legend><small class="form-text text-muted">Choose how you would like to receive the magazine.</small>
+        <div class="form-group" data-toggle="tooltip" data-placement="left" id="subscription-type" title="Choose how you wish to receive the magazine.">
+            <div :for="formatOption in this.formatOptions" class="form-check">
+                <input @bind="format" class="form-check-input" type="radio" id="{ formatOption.value }-input" name="format" value="{ formatOption.value }" />
+                <label class="form-check-label" for="{ formatOption.value }-input">{ formatOption.label }</label>
+            </div>
+        </div>
+    </fieldset>
+
+    <p>{ this.format }</p>
+    
+    <fieldset id="discount-fieldset">
+        <legend>Discount</legend><small class="form-text text-muted">Choose from our sliding-scale pricing options.</small>
+        <div class="form-group" data-toggle="tooltip" data-placement="left" id="discount" title="Choose how much you can afford to pay.">
+            <div :for="formatOption in this.discountOptions" class="form-check">
+                <input @bind="format" class="form-check-input" type="radio" id="{ formatOption.value }-input" name="format" value="{ formatOption.value }" />
+                <label class="form-check-label" for="{ formatOption.value }-input">{ formatOption.label }</label>
+            </div>
+        </div>
+        <small>* Subscriptions and donations each cover about a third of Western Friend’s expenses. (The remainder are covered by Yearly Meeting subsidies and miscellaneous sources.) By doubling your “regular cost” payment for your subscription, you help cover the true cost of Western Friend. We record half of each “true cost” payment as a donation. All donations to Western Friend, 501(c)3 nonprofit corporation are tax deductible.</small>
+    </fieldset>
+    
+    <p>{ this.discount }</p>
+    
+    <fieldset
+        id="recurring-donation-fieldset">
+        <legend>Recurrence</legend><small class="form-text text-muted">Will you help sustain Western Friend with a recurring subscription?</small>
+        <div class="form-group" id="recurring-subscription-formgroup">
+            <div class="form-check" id="recurring-subscription-yes-fieldset"><input class="form-check-input" type="radio" id="recurring-subscription-yes" name="recurring-subscription-yes" checked /><label class="form-check-label" for="formCheck-3">Yes</label></div>
+            <div class="form-check" id="recurring-subscription-no-fieldset"><input class="form-check-input" type="radio" id="recurring-subscription-no" name="recurring-subscription" /><label class="form-check-label" for="recurring-subscription-no">No</label></div>
+        </div>
+    </fieldset>
+
+    <!-- Identify your business so that you can collect the payments. -->
+    <input type="hidden" name="business" value="sb-ifvcy2535507@business.example.com">
+    <input type="hidden" name="lc" value="US">
+
+    <!-- Specify a Subscribe button. -->
+    <input type="hidden" name="cmd" value="_xclick-subscriptions">
+    
+    <!-- Identify the subscription. -->
+    <!-- TODO: change these values dynamically based on user selection -->
+    <input type="hidden" name="item_name" value="Magazine Subscription">
+    <input type="hidden" name="item_number" value="magazine_subscription">
+
+    <!-- Set the terms of the regular subscription. -->
+    <input type="hidden" name="currency_code" value="USD">
+
+    <!-- amount -->
+    <!-- TODO: change this value dynamically based on user selection -->
+    <input type="hidden" name="a3" value="5.00">
+
+    <!-- period -->
+    <input type="hidden" name="p3" value="1">
+
+    <!-- time increment-->
+    <input type="hidden" name="t3" value="Y">
+
+    <!-- Set recurring payments until canceled. -->
+    <!-- TODO: make low-income subscription not auto-renew -->
+    <input type="hidden" name="src" value="1">
+
+
+    <!-- Display the payment button. -->
+    <input type="image" name="submit"
+    src="https://www.paypalobjects.com/en_US/i/btn/btn_subscribe_LG.gif"
+    alt="Subscribe">
+    <img alt="" width="1" height="1"
+    src="https://www.paypalobjects.com/en_US/i/scr/pixel.gif" >
+</form>
+
+{% endblock content %}
+
+{% block extra_js %}
+<script type="module">
+  
+  import Litedom from '//unpkg.com/litedom';
+
+  Litedom({
+    // element to attach the component
+    el: '#paypal-form',  
+    
+    // reactive data on the page
+    data: {
+        format: "",
+        discount: "",
+        formatOptions: [
+            {
+                label: "PDF",
+                value: "pdf",
+                basePrice: 10,
+            },
+            {
+                label: "Print",
+                value: "print",
+                basePrice: 20,
+            },
+            {
+                label: "Both",
+                value: "both",
+                basePrice: 30,
+            }
+        ],
+        discountOptions: [
+            {
+                label: "True cost",
+                value: "true-cost",
+                multiplier: 2,
+            },
+            {
+                label: "Regular",
+                value: " regular",
+                multiplier: 1,
+            },
+            {
+                label: "Low income",
+                value: "low-income",
+                basePrice: 0.5,
+            },
+            {
+                label: "International",
+                value: "international",
+                basePrice: 1.5,
+            }
+        ],
+        subscriptionCost: 0,
+    },
+  });
+
+</script>
+{% endblock extra_js %}

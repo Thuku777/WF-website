@@ -1,9 +1,11 @@
+import logging
 from django.shortcuts import get_object_or_404, redirect, render
-
-import braintree
+from django.views.decorators.csrf import csrf_exempt
 
 from orders.models import Order
 from subscription.models import Subscription
+
+logger = logging.getLogger(__name__)
 
 
 def payment_process(request, previous_page):
@@ -51,10 +53,7 @@ def payment_process(request, previous_page):
         return render(
             request,
             "payment/process.html",
-            {
-                "client_token": client_token,
-                "payment_total": entity.get_total_cost()
-            },
+            {"client_token": client_token, "payment_total": entity.get_total_cost()},
         )
 
 
@@ -72,3 +71,13 @@ def clear_payment_session_vars(request):
     # without polluting the view code
     request.session["order_id"] = None
     request.session["subscription_id"] = None
+
+
+@csrf_exempt
+def test_subscribe(request):
+
+    if request.method == "POST":
+        print(request)
+        return render(request, "payment/test_subscribe.html", {},)
+    else:
+        return render(request, "payment/test_subscribe.html", {},)

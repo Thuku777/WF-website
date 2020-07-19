@@ -43,9 +43,10 @@
         </div>
     </fieldset>
 
+    <!-- PayPal field reference: https://developer.paypal.com/docs/paypal-payments-standard/integration-guide/Appx-websitestandard-htmlvariables/# -->
+
     <!-- Identify your business so that you can collect the payments. -->
     <input type="hidden" name="business" value="sb-ifvcy2535507@business.example.com">
-    <input type="hidden" name="lc" value="US">
 
     <!-- Specify a Subscribe button. -->
     <input type="hidden" name="cmd" value="_xclick-subscriptions">
@@ -53,6 +54,7 @@
     <!-- Identify the subscription. -->
     <!-- TODO: change these values dynamically based on user selection -->
     <input type="hidden" name="item_name" value="Magazine Subscription">
+    <!-- TODO: consider using the `item_number` as a reference to the Subscription instance ID-->
     <input type="hidden" name="item_number" value="magazine_subscription">
 
     <!-- Set the terms of the regular subscription. -->
@@ -69,9 +71,11 @@
     <input type="hidden" name="t3" value="Y">
 
     <!-- Set recurring payments until canceled. -->
-    <!-- TODO: make low-income subscription not auto-renew -->
+    <!-- TODO: make low-income subscription not auto-renew by changing this value to zero -->
     <input type="hidden" name="src" value="1">
 
+    <!-- TODO: add a `return` field linking back to the site when payment is successful -->
+    <!-- TODO: consider using the `custom` field to contain the magazine format or similar value -->
 
     <!-- Display the payment button. -->
     <input type="image" name="submit"
